@@ -1,0 +1,44 @@
+club:
+  name: "Example Football Club"
+  shortName: "Example FC"
+  initials: "EFC"
+  city: "Example City"
+  state: "ST"
+  league: "Example League"
+  venue: "Example Ground"
+  foundedYear: 2018
+
+contact:
+  email: "hello@example.com"
+  phone: ""
+  address: ""
+  website: "https://example.com"
+  instagram: ""
+  youtube: ""
+
+palette:
+  primary: "#000000"
+  secondary: "#FFFFFF"
+  accent: "#888888"
+  neutralsAllowed: true
+
+assets:
+  crestColor: "originals/crest/crest-color.png"
+  crestOnDark: "originals/crest/crest-white.png"
+  clubPhotos:
+    - "originals/club-photos/photo-01.jpg"
+    - "originals/club-photos/photo-02.jpg"
+    - "originals/club-photos/photo-03.jpg"
+    - "originals/club-photos/photo-04.jpg"
+  merchandise:
+    - "originals/merchandise/product-01.png"
+    - "originals/merchandise/product-02.png"
+    - "originals/merchandise/product-03.png"
+
+copyApproval:
+  approved: false
+  approvedBy: ""
+  approvedAt: ""
+
+publishing:
+  approved: false
