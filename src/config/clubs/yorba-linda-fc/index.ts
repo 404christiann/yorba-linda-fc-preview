@@ -1,5 +1,12 @@
 import type { Fixture, Player, Position, ProspectConfig, StaffMember } from "@/config/types";
 
+// Hosted in the Mockup_DB Supabase project (org: Onzio Mockups), bucket
+// "assets", folder "yorbaFCAssets" — see supabase-image-loader.js and
+// next.config.ts for why these route through Supabase instead of Vercel's
+// Image Optimization API.
+const ASSET_BASE =
+  "https://ydvggllbrswfchgjhjhr.supabase.co/storage/v1/object/public/assets/yorbaFCAssets";
+
 const firstTeam: Array<[string, string, number, Position]> = [
   ["Aleks", "Petrov", 1, "GK"], ["Marc", "Dubois", 21, "GK"],
   ["Erion", "Kastrati", 2, "DF"], ["Rafael", "Souza", 3, "DF"], ["Jordan", "Mitchell", 4, "DF"], ["Nikolay", "Ivanov", 5, "DF"], ["Tyler", "Brooks", 15, "DF"], ["Bruno", "Alves", 22, "DF"],
@@ -34,14 +41,14 @@ export const yorbaLindaFc: ProspectConfig = {
     primaryColor: "#2A2E54",
     secondaryColor: "#DAAE2B",
     accentColor: "#FEFEFE",
-    crest: "/prospect/crest.png",
-    heroImage: "/prospect/hero.webp",
+    crest: `${ASSET_BASE}/crest.png`,
+    heroImage: `${ASSET_BASE}/hero.webp`,
     heroImageAlt: "Yorba Linda FC's squad gathered on the pitch after a match",
     galleryImages: [
-      { src: "/prospect/gallery/matchday-01.webp", orientation: "portrait", alt: "Yorba Linda FC player poses with the match ball" },
-      { src: "/prospect/gallery/matchday-02.webp", orientation: "portrait", alt: "Yorba Linda FC players contest the ball near goal" },
-      { src: "/prospect/gallery/matchday-03.webp", orientation: "portrait", alt: "Yorba Linda FC midfielder brings the ball forward" },
-      { src: "/prospect/gallery/matchday-04.webp", orientation: "landscape", alt: "Yorba Linda FC squad photo before kickoff" },
+      { src: `${ASSET_BASE}/matchday-01.webp`, orientation: "portrait", alt: "Yorba Linda FC player poses with the match ball" },
+      { src: `${ASSET_BASE}/matchday-02.webp`, orientation: "portrait", alt: "Yorba Linda FC players contest the ball near goal" },
+      { src: `${ASSET_BASE}/matchday-03.webp`, orientation: "portrait", alt: "Yorba Linda FC midfielder brings the ball forward" },
+      { src: `${ASSET_BASE}/matchday-04.webp`, orientation: "landscape", alt: "Yorba Linda FC squad photo before kickoff" },
     ],
   },
   copy: {
@@ -106,8 +113,8 @@ export const yorbaLindaFc: ProspectConfig = {
   },
   sponsors: [],
   store: { mode: "internal", products: [
-    { id: "prod01", name: "Navy Home Jersey", price: 65, image: "/prospect/store/jersey-blue.webp", category: "jersey", sizes: ["S", "M", "L", "XL"] },
-    { id: "prod02", name: "White Away Jersey", price: 65, image: "/prospect/store/jersey-white.webp", category: "jersey", sizes: ["S", "M", "L", "XL"] },
+    { id: "prod01", name: "Navy Home Jersey", price: 65, image: `${ASSET_BASE}/jersey-blue.webp`, category: "jersey", sizes: ["S", "M", "L", "XL"] },
+    { id: "prod02", name: "White Away Jersey", price: 65, image: `${ASSET_BASE}/jersey-white.webp`, category: "jersey", sizes: ["S", "M", "L", "XL"] },
   ] },
   analytics: {
     weeklyPageViews: [{weekLabel:"Jun 1",views:210},{weekLabel:"Jun 8",views:265},{weekLabel:"Jun 15",views:298},{weekLabel:"Jun 22",views:312},{weekLabel:"Jun 29",views:355},{weekLabel:"Jul 6",views:401},{weekLabel:"Jul 13",views:438}],
