@@ -585,10 +585,10 @@ button.staff-card { appearance:none; }
 .store-campaign-copy h1 em { color:var(--accent-bright); font-style:normal; }
 .store-campaign-copy>p { max-width:48ch; margin:30px 0 0; color:var(--on-dark-muted); font-size:clamp(.94rem,1.15vw,1.05rem); line-height:1.7; }
 .store-featured-product { min-width:0; min-height:610px; display:grid; grid-template-rows:minmax(0,1fr) auto; align-self:stretch; margin-top:32px; overflow:hidden; border:0; border-radius:22px; padding:0; background:var(--surface); color:var(--primary); text-align:left; }
-.store-featured-product.is-hero-photo { grid-template-rows:auto auto; align-self:center; justify-self:center; min-height:0; width:100%; max-width:min(760px,calc((100svh - 250px) * 2932 / 3439)); }
+.store-featured-product.is-hero-photo { grid-template-rows:auto auto; align-self:center; justify-self:center; min-height:0; width:100%; max-width:min(760px,calc((100svh - 250px) * 2932 / 3439)); padding-top:32px; }
 .store-featured-image { min-height:0; position:relative; margin:32px 30px 0; }
 .store-featured-image img { object-fit:contain; filter:drop-shadow(0 30px 26px color-mix(in srgb,var(--primary-deep) 24%,transparent)); }
-.store-featured-image.is-hero-photo { aspect-ratio:2932/3439; }
+.store-featured-image.is-hero-photo { aspect-ratio:2932/3439; margin-top:0; }
 .store-featured-image.is-hero-photo img { object-fit:contain; object-position:bottom; filter:none; }
 .store-featured-fade { position:absolute; inset:auto 0 0 0; height:20%; pointer-events:none; background:linear-gradient(to bottom,color-mix(in srgb,var(--surface) 0%,transparent) 0%,color-mix(in srgb,var(--surface) 55%,transparent) 55%,var(--surface) 100%); }
 .store-featured-footer { display:flex; align-items:baseline; justify-content:space-between; gap:20px; padding:0 28px 28px; }
@@ -1037,7 +1037,7 @@ button.staff-card { appearance:none; }
   .standings-row>*:nth-child(2),.standings-row>*:nth-child(3),.standings-row>*:nth-child(4),.standings-row>*:nth-child(5),.standings-row>*:nth-child(6) { display:none; }
   .profile-page>header { grid-template-columns:1fr; gap:16px; padding:48px 0; min-height:0; }
   .store-campaign { min-height:auto; grid-template-columns:1fr; gap:0; padding:94px 22px 0; }
-  .store-campaign-copy { padding:72px 0 42px; }
+  .store-campaign-copy { padding:0 0 42px; }
   .store-campaign-copy h1 { font-size:clamp(3.25rem,12vw,5.4rem); }
   .store-campaign-copy>p { margin-top:24px; }
   .store-featured-product { min-height:570px; margin-top:0; border-radius:18px; } .store-featured-product.is-hero-photo { max-width:620px; }
@@ -1115,7 +1115,7 @@ button.staff-card { appearance:none; }
   .kit-home { padding:68px 18px 74px; } .kit-home-head { margin-bottom:36px; } .kit-home-head h2 { font-size:clamp(3rem,15vw,4.5rem); } .kit-home-intro>a { width:100%; justify-content:center; } .kit-collection { grid-auto-columns:84vw; margin-inline:-18px; padding-inline:18px; } .kit-product { min-height:460px; border-radius:14px; } .kit-product-media { margin:20px 16px 0; } .kit-product-meta { grid-template-columns:1fr auto; padding:17px; }
   .roster-grid,.staff-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; } .schedule-section,.stats-table-wrap,.manifesto,.defines-section,.training-section,.contact-section { margin-inline:18px; }
   .store-campaign { padding-inline:16px; }
-  .store-campaign-copy { padding:62px 0 36px; }
+  .store-campaign-copy { padding:0 0 36px; }
   .store-campaign-copy h1 { font-size:clamp(3rem,14vw,4.2rem); }
   .store-featured-product { min-height:500px; border-radius:14px; } .store-featured-product.is-hero-photo { max-width:426px; }
   .store-featured-image { margin-inline:14px; }
