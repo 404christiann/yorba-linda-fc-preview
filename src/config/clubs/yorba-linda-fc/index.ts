@@ -147,6 +147,7 @@ export const yorbaLindaFc: ProspectConfig = {
     story: "Yorba Linda FC was created for players who still take the game seriously but don't always have clear options after high school, college, or academy programs. Some of our players have ambitions to play professionally, others are looking to stay sharp in a serious environment, and some simply miss competitive football.\n\nWe focus on the 18+ age group — players who are beyond youth academies but still want structured, challenging games. Our group brings together people from different countries and backgrounds, including players from Bulgaria, Albania, Brazil, France, and the U.S.\n\nAlthough the club is run as a hobby project, the expectations are clear: show up, compete, stay committed, and improve. We're not part of an official academy system, but some players have used their time here to stay ready for opportunities, both in the U.S. and abroad.",
     mission: "Bring out the best in our players and help them grow to semi-pro and pro levels.",
     highlights: ["Est. 2026 in Yorba Linda, California", "Multicultural 18+ roster spanning Bulgaria, Albania, Brazil, France, and the U.S.", "Competes in the SoCal Premier League"],
+    groupPhoto: { image: `${ASSET_BASE}/group_photo.jpg`, alt: "Yorba Linda FC players huddled together on the field before a match" },
     training: {
       intro: "Training is focused on match preparation, fitness, and technical sharpness. Sessions cover:",
       points: [

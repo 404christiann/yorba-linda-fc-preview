@@ -157,6 +157,8 @@ export interface AboutContent {
   mission?: string;
   highlights?: string[];
   training?: { intro: string; points: string[]; closing?: string };
+  /** Optional real team/group photo shown as a full-width band after the manifesto section. */
+  groupPhoto?: { image: string; alt: string };
 }
 export interface Sponsor { id: string; name: string; logo: string; level: "title" | "gold" | "partner"; url?: string; blurb?: string; }
 export interface StoreConfig { mode: "internal" | "external"; externalProviderLabel?: string; products: Product[]; }

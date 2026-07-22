@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { prospect } from "@/config/prospect";
 
 export function ClubScreen() {
@@ -14,9 +15,16 @@ export function ClubScreen() {
       </header>
 
       <section className="manifesto">
-        <span className="story-mark">{String(prospect.club.foundedYear ?? "").slice(-2)}</span>
         <div>{prospect.about.story.split("\n\n").map((paragraph) => <p key={paragraph}>{paragraph}</p>)}</div>
-        <blockquote>“{prospect.about.mission}”</blockquote>
+        <div className="manifesto-quote">
+          <blockquote>“{prospect.about.mission}”</blockquote>
+          {prospect.about.groupPhoto && (
+            <div className="manifesto-photo-frame">
+              <Image src={prospect.about.groupPhoto.image} alt={prospect.about.groupPhoto.alt} fill sizes="(max-width: 800px) 92vw, 38vw" />
+              <span className="manifesto-photo-shade" aria-hidden="true" />
+            </div>
+          )}
+        </div>
       </section>
 
       {prospect.about.highlights && prospect.about.highlights.length > 0 && (

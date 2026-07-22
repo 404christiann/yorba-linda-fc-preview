@@ -54,6 +54,28 @@ export function HomeScreen() {
       </div>
     </section>
 
+    <TierGate feature="store"><section className="kit-home">
+      <header className="kit-home-head">
+        <div>
+          <span className="eyebrow">{prospect.copy.home.collectionEyebrow}</span>
+          <h2>{prospect.copy.home.collectionHeadline[0]}<br/><em>{prospect.copy.home.collectionHeadline[1]}</em></h2>
+        </div>
+        <div className="kit-home-intro">
+          <p>{prospect.copy.home.collectionIntro}</p>
+          <Link href="/store">Shop the collection</Link>
+        </div>
+      </header>
+      <div className="kit-collection" role="list" aria-label={`${prospect.club.name} merchandise`}>
+        {featuredKits.map((product, index) => <Link href="/store" className="kit-product" data-kit={index + 1} role="listitem" key={product.id}>
+          <div className="kit-product-media"><Image src={product.image} alt={product.name} fill sizes="(max-width: 800px) 82vw, 34vw"/></div>
+          <div className="kit-product-meta">
+            <span><small>{prospect.copy.home.collectionItemLabel}</small><strong>{product.name}</strong></span>
+            <span className="kit-product-price">${product.price}</span>
+          </div>
+        </Link>)}
+      </div>
+    </section></TierGate>
+
     {next && <section className="match-feature">
       <header className="match-feature-head"><span className="eyebrow">Next match</span><p>{next.competition}</p></header>
       <div className="match-stage">
@@ -80,28 +102,6 @@ export function HomeScreen() {
     <StandingsTable />
 
     <MatchdaySlideshow />
-
-    <TierGate feature="store"><section className="kit-home">
-      <header className="kit-home-head">
-        <div>
-          <span className="eyebrow">{prospect.copy.home.collectionEyebrow}</span>
-          <h2>{prospect.copy.home.collectionHeadline[0]}<br/><em>{prospect.copy.home.collectionHeadline[1]}</em></h2>
-        </div>
-        <div className="kit-home-intro">
-          <p>{prospect.copy.home.collectionIntro}</p>
-          <Link href="/store">Shop the collection</Link>
-        </div>
-      </header>
-      <div className="kit-collection" role="list" aria-label={`${prospect.club.name} merchandise`}>
-        {featuredKits.map((product, index) => <Link href="/store" className="kit-product" data-kit={index + 1} role="listitem" key={product.id}>
-          <div className="kit-product-media"><Image src={product.image} alt={product.name} fill sizes="(max-width: 800px) 82vw, 34vw"/></div>
-          <div className="kit-product-meta">
-            <span><small>{prospect.copy.home.collectionItemLabel}</small><strong>{product.name}</strong></span>
-            <span className="kit-product-price">${product.price}</span>
-          </div>
-        </Link>)}
-      </div>
-    </section></TierGate>
 
     {prospect.branding.recruitImage && (
       <section className="recruit-cta">
