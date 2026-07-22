@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import type { Player, StaffMember } from "@/config/types";
 import { prospect } from "@/config/prospect";
+import { NationalityFlag } from "./NationalityFlag";
 
 type Props =
   | { player: Player; member?: never; onClose: () => void }
@@ -17,8 +18,8 @@ const POSITION_LABELS = {
   FW: "Forward",
 } as const;
 
-function initials(name: string) {
-  return name.split(" ").map((part) => part[0]).join("").slice(0, 3);
+function roleInitials(role: string) {
+  return role.split(" ").map((part) => part[0]).join("").slice(0, 3);
 }
 
 export function RosterProfileModal({ player, member, onClose }: Props) {
@@ -26,6 +27,7 @@ export function RosterProfileModal({ player, member, onClose }: Props) {
   const personName = player ? `${player.firstName} ${player.lastName}` : member.name;
   const imageSrc = player?.photo ?? member?.photo ?? prospect.branding.crest;
   const isPlaceholder = player ? !player.photo : !member.photo;
+  const nationality = player?.nationality ?? member?.nationality;
 
   useEffect(() => {
     const previousFocus = document.activeElement as HTMLElement | null;
@@ -68,8 +70,9 @@ export function RosterProfileModal({ player, member, onClose }: Props) {
             className={isPlaceholder ? "is-crest" : "is-photo"}
             sizes="(max-width: 640px) 100vw, 520px"
           />
+          <span className="roster-modal-fade" aria-hidden/>
           <span className="roster-modal-mark" aria-hidden>
-            {player ? player.number : initials(member.name)}
+            {player ? player.number : roleInitials(member.role)}
           </span>
           <button ref={closeRef} type="button" onClick={onClose} className="roster-modal-close" aria-label="Close profile">
             <span aria-hidden>×</span>
@@ -82,6 +85,7 @@ export function RosterProfileModal({ player, member, onClose }: Props) {
               <span>{player ? POSITION_LABELS[player.position] : member.role}</span>
               <h2 id="roster-modal-title">{personName}</h2>
             </div>
+            <NationalityFlag nationality={nationality}/>
           </div>
 
           {player ? <PlayerDetails player={player} /> : <StaffDetails member={member} />}

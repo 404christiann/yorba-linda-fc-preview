@@ -8,8 +8,8 @@ import { useHasFeature } from "@/components/tier/TierProvider";
 import { NationalityFlag } from "./NationalityFlag";
 import { RosterProfileModal } from "./RosterProfileModal";
 
-function initials(name: string) {
-  return name.split(" ").map((part) => part[0]).join("").slice(0, 3);
+function roleInitials(role: string) {
+  return role.split(" ").map((part) => part[0]).join("").slice(0, 3);
 }
 
 export function StaffCard({ member }: { member: StaffMember }) {
@@ -17,6 +17,8 @@ export function StaffCard({ member }: { member: StaffMember }) {
   const [modalOpen, setModalOpen] = useState(false);
   const imageSrc = member.photo ?? prospect.branding.crest;
   const isPlaceholder = !member.photo;
+  const [firstName, ...rest] = member.name.split(" ");
+  const lastName = rest.join(" ");
 
   const content = (
     <>
@@ -31,10 +33,13 @@ export function StaffCard({ member }: { member: StaffMember }) {
       </span>
       <span className="staff-card-copy">
         <span className="staff-card-topline">
-          <span className="staff-card-name">{member.name}</span>
+          <span className="staff-card-name">
+            <small>{firstName}</small>
+            <strong>{lastName}</strong>
+          </span>
           <NationalityFlag nationality={member.nationality}/>
         </span>
-        <span className="staff-card-role"><b>{initials(member.name)}</b>{member.role}</span>
+        <span className="staff-card-role"><b>{roleInitials(member.role)}</b>{member.role}</span>
         {hasProfiles && <span className="staff-card-hint">View profile</span>}
       </span>
     </>
