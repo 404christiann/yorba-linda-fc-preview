@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { StaffMember } from "@/config/types";
 import { prospect } from "@/config/prospect";
 import { useHasFeature } from "@/components/tier/TierProvider";
+import { NationalityFlag } from "./NationalityFlag";
 import { RosterProfileModal } from "./RosterProfileModal";
 
 function initials(name: string) {
@@ -29,7 +30,10 @@ export function StaffCard({ member }: { member: StaffMember }) {
         />
       </span>
       <span className="staff-card-copy">
-        <span className="staff-card-name">{member.name}</span>
+        <span className="staff-card-topline">
+          <span className="staff-card-name">{member.name}</span>
+          <NationalityFlag nationality={member.nationality}/>
+        </span>
         <span className="staff-card-role"><b>{initials(member.name)}</b>{member.role}</span>
         {hasProfiles && <span className="staff-card-hint">View profile</span>}
       </span>

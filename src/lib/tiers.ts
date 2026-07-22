@@ -4,10 +4,10 @@ export const TIER_LABELS: Record<Tier, string> = { starter: "Starter", pro: "Pro
 const TIER_RANK: Record<Tier, number> = { starter: 0, pro: 1 };
 
 export type FeatureKey =
-  | "sponsors" | "stats" | "expandedProfiles" | "store" | "seasons" | "analytics" | "contentControls";
+  | "sponsors" | "stats" | "expandedProfiles" | "store" | "seasons" | "analytics" | "contentControls" | "standings";
 
 const FEATURE_MIN_TIER: Record<FeatureKey, Tier> = {
-  sponsors: "pro", stats: "pro", expandedProfiles: "pro", store: "pro", seasons: "pro", analytics: "pro", contentControls: "pro",
+  sponsors: "pro", stats: "pro", expandedProfiles: "pro", store: "pro", seasons: "pro", analytics: "pro", contentControls: "pro", standings: "pro",
 };
 
 export function hasFeature(tier: Tier, feature: FeatureKey): boolean {

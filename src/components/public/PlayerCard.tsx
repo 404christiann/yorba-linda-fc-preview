@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { Player } from "@/config/types";
 import { prospect } from "@/config/prospect";
 import { useHasFeature } from "@/components/tier/TierProvider";
+import { NationalityFlag } from "./NationalityFlag";
 import { RosterProfileModal } from "./RosterProfileModal";
 
 const POSITION_LABELS = {
@@ -39,7 +40,6 @@ export function PlayerCard({ player, compact = false }: { player: Player; compac
 
   const cardContent = (
     <>
-      <span className="player-card-number" aria-hidden>{player.number}</span>
       <span className="player-card-media">
         <Image
           src={imageSrc}
@@ -52,12 +52,13 @@ export function PlayerCard({ player, compact = false }: { player: Player; compac
       <span className="player-card-identity">
         <span className="player-card-topline">
           <strong>{String(player.number).padStart(2, "0")}</strong>
-          <small>{POSITION_LABELS[player.position]}</small>
+          <NationalityFlag nationality={player.nationality}/>
         </span>
         <span className="player-card-name">
           <small>{player.firstName}</small>
           <strong>{player.lastName}</strong>
         </span>
+        <span className="player-card-position">{POSITION_LABELS[player.position]}</span>
         {hasProfiles && stats.length > 0 && (
           <span className="player-card-stats" aria-hidden>
             {stats.map(([label, value]) => (

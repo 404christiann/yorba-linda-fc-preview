@@ -2,7 +2,11 @@
 
 ## Status
 
-This is the clean Onzio prospect master template. Meridian United is fictional reference data used to verify the design. Do not turn this repository into a real prospect or publish a generated prospect without Christian's explicit approval.
+This is the **Yorba Linda FC** prospect snapshot — a generated Onzio sales preview, not the master template. It is an independent copy: it does not automatically receive later changes made to the master template at `onzioProspectTemplate`, and it must not be treated as reusable reference data for other clubs.
+
+Real: club name, crest, city, contact info, league/venue facts, club/player photos, real training-program details (`about.training`), two supplied merchandise products with real transparent front + back photos (navy home jersey, white away jersey), 7 real sponsor logos, 3 real governing-body/league affiliation marks (US Soccer, FIFA, SWPL), and a real recruiting/store hero photo. Fictional sample content: roster, staff, fixtures/results, and league standings (opponent clubs are invented, not the club's real current opponents).
+
+Not yet published. No GitHub repository push or Vercel deployment happens without Christian's explicit green light — see `docs/PROSPECT_INTAKE.example.yaml`'s equivalent for this club at `../intake/PROSPECT_INTAKE.yaml` (outside this repo) for full intake and round-by-round review history.
 
 ## Commands
 
@@ -19,27 +23,58 @@ npm run validate
 ## Architecture
 
 - Next.js App Router, React, strict TypeScript, Tailwind CSS v4, GSAP/ScrollTrigger, and Framer Motion.
-- Geist Sans and Geist Mono are checked in under `src/app/fonts/` and loaded with `next/font/local` so clean builds do not require network access.
+- Sora (display/headings), Inter (body/UI), and Geist Mono (numeric/label accents) are checked in as static files under `src/app/fonts/` and loaded with `next/font/local` so clean builds do not require network access. (Geist Sans was replaced by Sora + Inter; Geist Mono is unchanged.)
 - `src/app/(public)/` contains the public club experience.
 - `src/app/admin/` contains the sample admin experience.
 - `src/config/types.ts` defines the prospect contract, including all identity-driven copy.
+- `src/config/clubs/yorba-linda-fc/index.ts` is this club's only config — the single source of truth for identity, copy, roster, fixtures, and standings.
 - `src/config/prospect.ts` is the only active-club import.
 - `src/lib/tiers.ts` owns Starter/Pro feature gates.
 - `src/lib/store/MockDataProvider.tsx` owns shared in-memory sample mutations.
-- `public/prospect/` contains only the active prospect's optimized site assets.
-- `scripts/validate-template.mjs` enforces the reusable boundary.
+- `public/prospect/` contains only this club's optimized site assets.
+- `scripts/validate-template.mjs` enforces the reusable boundary (still runs here even though this isn't the master — it checks this repo's own shared-code isolation).
 
-Before editing Next.js code, read the relevant guide in `node_modules/next/dist/docs/` as required by `AGENTS.md`.
+## Site header
+
+- Nav order: Home, About (`/club`), Roster, Schedule, Store (Store hidden under `?tier=starter`).
+- `SiteHeader.tsx`'s `TRANSPARENT_HERO_PATHS` (`/`, `/store`, `/sponsors`, `/club`) lists every route that opens on a full-bleed dark hero — the header is transparent with light text there, then goes solid/frosted-white on scroll. Any other route stays solid at all times.
+- The crest is always visible in the header (no fade-in-on-scroll). Next to it, `branding.affiliations` (US Soccer, FIFA, SWPL — real governing-body/league marks, sourced from a live club site reference, `roseCityWebsite` in Downloads, for the visual pattern) renders as a small logo cluster with a divider, swapping between white and color logo variants with the same transparent/solid header state.
+
+## Feature specific to this club: league standings
+
+Unlike the base template, this snapshot has the **Standings** feature turned on (`standings` is populated in the club config) because Yorba Linda FC's real site has a league table on its About page and Christian asked to replicate it. This is an *optional* master-template feature — most future prospects will not have `standings` configured and will not show this nav item, admin tab, or page section at all.
+
+- Admin: `/admin/standings` — add/edit/remove teams (team name, logo, GP, W, D, L, GD, Points), auto-sorted by points.
+- Public: lives entirely on the homepage now (`StandingsTable.tsx`, rendered after the sponsors section) — there is no standings content on `/club` anymore. The table is interactive: click any stat column header to sort by it (active column shows a ▲/▼ indicator), rows animate to their new position (Framer Motion, respects `prefers-reduced-motion`), and the `#` rank column always stays pinned to the official points/GD standing regardless of which column is being sorted. On mobile it collapses to just Team + Points to avoid horizontal scroll.
+- Pro-tier gated, same as Stats/Sponsors/Seasons/Analytics — hidden entirely under `?tier=starter`.
+
+If this feature needs changes beyond this club's own data (copy, styling, new columns, new behavior), the underlying code lives in the master template's shared components (`HomeScreen.tsx`, `StandingsTable.tsx`, `StandingsAdmin.tsx`, `AdminShell.tsx`, `AdminScreen.tsx`, `MockDataProvider.tsx`, `types.ts`, `tiers.ts`) — fix it there first, then port the change into this snapshot, the same way the feature was originally built.
+
+## Homepage section order
+
+Hero → Next match → Sponsors (logo carousel + "Get involved" CTA) → League standings → Matchday photo gallery → Shop the collection (Starter-hidden) → "Ready to compete?" recruiting CTA (closing section, real photo + real training copy, links to `/club`).
+
+There is no "Our identity" section on the homepage anymore — that content now lives on `/club` as a "What defines us" section (styled to match the Training section's bullet-list treatment), placed right after the manifesto.
+
+## Sponsors (`/sponsors`)
+
+Real sponsor logos (7: Fidelity, Flowable, IBM, Mark43, Pega, Shift Sports, Azure), sourced from Supabase, shown as a continuously scrolling carousel (same component used on the homepage). The page has no separate hero anymore — it opens directly into the sponsor carousel, followed by a "Get involved" contact block (Find us / Get in touch / real training hours / a message form) styled with the site's navy-to-gold gradient.
+
+## Store (`/store`)
+
+- Front jersey photos are real, transparent-cutout PNGs (not the old opaque studio photos). Each jersey also has an optional `backImage` — a Front/Back toggle appears in the product detail modal only; grid/card views always show the front.
+- The featured product panel shows a real player photo (not a flat product shot) fading into the white background via a `mask-image` gradient, rather than a hard photo edge.
+- **Known issue, not yet resolved:** hovering the featured photo still shows a visible gap/artifact near the top of the image (`.store-featured-image.is-hero-photo`, `globals.css`) — the `transform:scale()` hover-zoom and the `mask-image` fade appear to interact badly, and there's unresolved headroom in the source photo itself (`Yorba Linda FC roster pic example website cutout.png` has ~5.5% transparent padding above the hairline) that `object-position:top` isn't fully compensating for. Next session should either remove the hover-zoom transform on this element entirely or crop the source photo's dead space before reintroducing zoom.
 
 ## Locked product behavior
 
 - Pro opens when the URL has no `tier` query.
 - `?tier=starter` and `?tier=pro` are shareable.
-- Starter suppresses sponsor, store, statistics, seasons, and analytics content.
+- Starter suppresses sponsor, store, statistics, seasons, standings, and analytics content.
 - Public and admin surfaces share the same tier and in-memory sample state.
 - Sample changes reset on refresh.
 - The concept-preview disclosure and `noindex`/`nofollow` metadata are mandatory.
-- The supplied prospect palette is exact; only neutral white, black, and gray may supplement it.
+- The supplied prospect palette is exact (`#2A2E54` navy, `#DAAE2B` gold, `#FEFEFE` used as the on-dark accent role); only neutral white, black, and gray may supplement it.
 
 ## Non-goals
 
@@ -47,4 +82,4 @@ Do not add authentication, persistence, databases, API routes, server actions, p
 
 ## Publishing gate
 
-Generation, local verification, and user review do not authorize GitHub or Vercel publication. Publishing requires an explicit green light from Christian.
+Generation, local verification, and Christian's review do not authorize GitHub or Vercel publication on their own. Publishing requires his explicit green light, tracked separately per round in the intake folder's `LOCAL_REVIEW.md`.

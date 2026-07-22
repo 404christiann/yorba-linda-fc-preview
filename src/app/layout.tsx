@@ -5,9 +5,17 @@ import { prospect } from "@/config/prospect";
 import { Providers } from "./providers";
 import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/geist-latin.woff2",
-  variable: "--font-geist-sans",
+const sora = localFont({
+  src: "./fonts/sora-latin.woff2",
+  variable: "--font-sora",
+  weight: "100 800",
+  display: "swap",
+});
+
+const inter = localFont({
+  src: "./fonts/inter-latin.woff2",
+  variable: "--font-inter",
+  weight: "100 900",
   display: "swap",
 });
 
@@ -32,7 +40,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${sora.variable} ${inter.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body
         className="min-h-full"

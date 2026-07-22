@@ -14,6 +14,8 @@ export interface ProspectConfig {
   sponsors: Sponsor[];
   store: StoreConfig;
   analytics: AnalyticsSample;
+  /** Optional league table for the club page. Omit entirely for clubs that don't want it. */
+  standings?: StandingsTable;
 }
 
 export interface ProspectCopy {
@@ -28,8 +30,10 @@ export interface ProspectCopy {
     collectionHeadline: [string, string];
     collectionIntro: string;
     collectionItemLabel: string;
-    identityHeadline: [string, string];
     gallerySectionHeadline: [string, string];
+    recruitHeadline: [string, string];
+    recruitIntro: string;
+    recruitButtonLabel: string;
   };
   store: {
     eyebrow: string;
@@ -75,6 +79,14 @@ export interface Branding {
   heroImage: string;
   heroImageAlt: string;
   galleryImages?: Array<string | GalleryImage>;
+  /** Governing-body / league affiliation marks shown in the nav next to the crest (e.g. US Soccer, FIFA). Optional — most prospects won't have these. */
+  affiliations?: { name: string; colorLogo: string; whiteLogo: string }[];
+  /** Optional closing full-bleed recruiting photo for the homepage's final section. */
+  recruitImage?: string;
+  recruitImageAlt?: string;
+  /** Optional player cutout shown fading into the background behind the store's featured product. Falls back to the featured product's own photo. */
+  storeHeroImage?: string;
+  storeHeroImageAlt?: string;
 }
 
 export interface GalleryImage {
@@ -88,6 +100,7 @@ export interface ContactInfo {
   email: string;
   phone?: string;
   address?: string;
+  trainingHours?: { label: string; hours: string }[];
   social?: Partial<Record<"instagram" | "facebook" | "twitter" | "youtube" | "tiktok", string>>;
 }
 
@@ -103,6 +116,7 @@ export interface Player {
   number: number;
   position: Position;
   photo?: string;
+  nationality?: string;
   hometown?: string;
   height?: string;
   yearJoined?: number;
@@ -122,7 +136,7 @@ export interface PlayerSeasonStats {
   saves?: number;
 }
 
-export interface StaffMember { id: string; teamId?: string; name: string; role: string; photo?: string; bio?: string; }
+export interface StaffMember { id: string; teamId?: string; name: string; role: string; photo?: string; nationality?: string; bio?: string; }
 
 export interface Fixture {
   id: string;
@@ -138,10 +152,18 @@ export interface Fixture {
 }
 
 export interface MatchResult { clubScore: number; opponentScore: number; scorers?: string[]; attendance?: number; note?: string; }
-export interface AboutContent { story: string; mission?: string; highlights?: string[]; }
+export interface AboutContent {
+  story: string;
+  mission?: string;
+  highlights?: string[];
+  training?: { intro: string; points: string[]; closing?: string };
+}
 export interface Sponsor { id: string; name: string; logo: string; level: "title" | "gold" | "partner"; url?: string; blurb?: string; }
 export interface StoreConfig { mode: "internal" | "external"; externalProviderLabel?: string; products: Product[]; }
-export interface Product { id: string; name: string; price: number; image: string; category: "jersey" | "training" | "accessory" | "youth"; sizes?: string[]; }
+export interface Product { id: string; name: string; price: number; image: string; /** Optional back-of-garment photo, shown via a toggle in the product detail modal. */ backImage?: string; category: "jersey" | "training" | "accessory" | "youth"; sizes?: string[]; }
+
+export interface StandingsRow { id: string; teamName: string; teamLogo?: string; gp: number; w: number; d: number; l: number; gd: number; points: number; }
+export interface StandingsTable { competitionName: string; intro?: string; rows: StandingsRow[]; }
 
 export interface AnalyticsSample {
   weeklyPageViews: { weekLabel: string; views: number }[];

@@ -73,8 +73,10 @@ export function SiteFooter() {
       <TierGate feature="sponsors">
         <div className="footer-partners">
           <span>Club partners</span>
-          {prospect.sponsors.slice(0, 4).map((sponsor) => (
-            <span key={sponsor.id}>{sponsor.name}</span>
+          {prospect.sponsors.map((sponsor) => (
+            <span className="footer-partner-logo" key={sponsor.id}>
+              <Image src={sponsor.logo} alt={sponsor.name} width={140} height={44}/>
+            </span>
           ))}
         </div>
       </TierGate>

@@ -1,10 +1,10 @@
 "use client";
 
 import { createContext, useContext, useMemo, useReducer, type ReactNode } from "react";
-import type { Fixture, MatchResult, Player, Product, ProspectConfig, Season, Sponsor, StaffMember, Team } from "@/config/types";
+import type { Fixture, MatchResult, Player, Product, ProspectConfig, Season, Sponsor, StaffMember, StandingsRow, Team } from "@/config/types";
 
 export interface MockDataState {
-  players: Player[]; staff: StaffMember[]; fixtures: Fixture[]; sponsors: Sponsor[]; products: Product[]; seasons: Season[]; teams: Team[];
+  players: Player[]; staff: StaffMember[]; fixtures: Fixture[]; sponsors: Sponsor[]; products: Product[]; seasons: Season[]; teams: Team[]; standings: StandingsRow[];
 }
 
 type Action =
@@ -13,6 +13,7 @@ type Action =
   | { type: "fixture/add"; fixture: Fixture } | { type: "fixture/update"; fixture: Fixture } | { type: "fixture/recordResult"; id: string; result: MatchResult }
   | { type: "sponsor/add"; sponsor: Sponsor } | { type: "sponsor/update"; sponsor: Sponsor } | { type: "sponsor/remove"; id: string }
   | { type: "product/add"; product: Product } | { type: "product/update"; product: Product } | { type: "product/remove"; id: string }
+  | { type: "standingsRow/add"; row: StandingsRow } | { type: "standingsRow/update"; row: StandingsRow } | { type: "standingsRow/remove"; id: string }
   | { type: "season/add"; season: Season } | { type: "reset"; state: MockDataState };
 
 interface StoreValue extends MockDataState {
@@ -39,13 +40,16 @@ function reducer(state: MockDataState, action: Action): MockDataState {
     case "product/add": return { ...state, products: [...state.products, action.product] };
     case "product/update": return { ...state, products: state.products.map((item) => item.id === action.product.id ? action.product : item) };
     case "product/remove": return { ...state, products: state.products.filter((item) => item.id !== action.id) };
+    case "standingsRow/add": return { ...state, standings: [...state.standings, action.row] };
+    case "standingsRow/update": return { ...state, standings: state.standings.map((item) => item.id === action.row.id ? action.row : item) };
+    case "standingsRow/remove": return { ...state, standings: state.standings.filter((item) => item.id !== action.id) };
     case "season/add": return { ...state, seasons: [...state.seasons, action.season] };
     case "reset": return action.state;
   }
 }
 
 function seed(config: ProspectConfig): MockDataState {
-  return { players: config.roster, staff: config.staff, fixtures: config.fixtures, sponsors: config.sponsors, products: config.store.products, seasons: config.seasons, teams: config.teams };
+  return { players: config.roster, staff: config.staff, fixtures: config.fixtures, sponsors: config.sponsors, products: config.store.products, seasons: config.seasons, teams: config.teams, standings: config.standings?.rows ?? [] };
 }
 
 export function MockDataProvider({ config, children }: { config: ProspectConfig; children: ReactNode }) {

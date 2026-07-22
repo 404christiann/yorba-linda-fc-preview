@@ -8,6 +8,7 @@ import type {
   Player,
   Position,
   StaffMember,
+  StandingsRow,
 } from "@/config/types";
 
 type PlayerFormProps = {
@@ -389,6 +390,81 @@ export function ResultForm({
           </button>
         )}
         <button>{fixture.result ? "Save result" : "Record result"}</button>
+      </div>
+    </form>
+  );
+}
+
+type StandingsRowFormProps = {
+  onSave: (row: Omit<StandingsRow, "id">) => void;
+  onCancel?: () => void;
+  initial?: StandingsRow;
+};
+
+export function StandingsRowForm({ onSave, onCancel, initial }: StandingsRowFormProps) {
+  const [teamName, setTeamName] = useState(initial?.teamName ?? "");
+  const [gp, setGp] = useState(initial?.gp ?? 0);
+  const [w, setW] = useState(initial?.w ?? 0);
+  const [d, setD] = useState(initial?.d ?? 0);
+  const [l, setL] = useState(initial?.l ?? 0);
+  const [gd, setGd] = useState(initial?.gd ?? 0);
+  const [points, setPoints] = useState(initial?.points ?? 0);
+
+  function submit(event: FormEvent) {
+    event.preventDefault();
+    onSave({ teamName, teamLogo: initial?.teamLogo, gp, w, d, l, gd, points });
+  }
+
+  return (
+    <form className="admin-form" onSubmit={submit}>
+      <label>
+        Team name
+        <input
+          required
+          value={teamName}
+          onChange={(event) => setTeamName(event.target.value)}
+          placeholder="Cypress United"
+        />
+      </label>
+      <div className="form-grid standings-form-grid">
+        <label>
+          GP
+          <input min="0" type="number" value={gp} onChange={(event) => setGp(Number(event.target.value))} />
+        </label>
+        <label>
+          W
+          <input min="0" type="number" value={w} onChange={(event) => setW(Number(event.target.value))} />
+        </label>
+        <label>
+          D
+          <input min="0" type="number" value={d} onChange={(event) => setD(Number(event.target.value))} />
+        </label>
+        <label>
+          L
+          <input min="0" type="number" value={l} onChange={(event) => setL(Number(event.target.value))} />
+        </label>
+        <label>
+          GD
+          <input type="number" value={gd} onChange={(event) => setGd(Number(event.target.value))} />
+        </label>
+        <label>
+          Points
+          <input min="0" type="number" value={points} onChange={(event) => setPoints(Number(event.target.value))} />
+        </label>
+      </div>
+      <label className="file-field">
+        Team logo
+        <input type="file" />
+        <span>Choose image</span>
+        <small>Logo uploads work on the live platform.</small>
+      </label>
+      <div className="form-actions">
+        {onCancel && (
+          <button type="button" className="secondary" onClick={onCancel}>
+            Cancel
+          </button>
+        )}
+        <button>{initial ? "Save changes" : "Save team"}</button>
       </div>
     </form>
   );

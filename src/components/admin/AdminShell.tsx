@@ -70,6 +70,14 @@ const ITEMS: AdminItem[] = [
     feature: "analytics",
     icon: <svg {...iconProps}><path d="M21 21H5a2 2 0 0 1-2-2V3M7 15l4-4 4 3 4-5"/></svg>,
   },
+  ...(prospect.standings
+    ? [{
+        href: "/admin/standings",
+        label: "Standings",
+        feature: "standings" as FeatureKey,
+        icon: <svg {...iconProps}><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="19" cy="6" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="18" r="1.4" fill="currentColor" stroke="none"/></svg>,
+      }]
+    : []),
 ];
 
 export function AdminShell({ children }: { children: React.ReactNode }) {
@@ -82,6 +90,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     sponsors: useHasFeature("sponsors"),
     store: useHasFeature("store"),
     analytics: useHasFeature("analytics"),
+    standings: useHasFeature("standings"),
   };
   const visible = ITEMS.filter((item) => !item.feature || flags[item.feature as keyof typeof flags]);
   const title = ITEMS.find((item) => item.href === pathname)?.label ?? "Admin";

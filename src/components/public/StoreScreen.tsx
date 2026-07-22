@@ -12,11 +12,13 @@ export function StoreScreen() {
   const { products } = useMockData();
   const [selected, setSelected] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [showBack, setShowBack] = useState(false);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const featured = products[0];
 
   const openProduct = (product: Product) => {
     setSelectedSize(null);
+    setShowBack(false);
     setSelected(product);
   };
 
@@ -47,9 +49,17 @@ export function StoreScreen() {
           <p>{prospect.copy.store.intro}</p>
         </div>
 
-        {featured && <button className="store-featured-product" onClick={() => openProduct(featured)} aria-label={`View ${featured.name} details`}>
-          <span className="store-featured-label">Featured · {prospect.copy.store.productTypeLabels[0] ?? "Merchandise"}</span>
-          <span className="store-featured-image"><Image src={featured.image} alt={featured.name} fill preload sizes="(max-width: 800px) 94vw, 48vw"/></span>
+        {featured && <button className={`store-featured-product${prospect.branding.storeHeroImage ? " is-hero-photo" : ""}`} onClick={() => openProduct(featured)} aria-label={`View ${featured.name} details`}>
+          <span className={`store-featured-image${prospect.branding.storeHeroImage ? " is-hero-photo" : ""}`}>
+            <Image
+              src={prospect.branding.storeHeroImage ?? featured.image}
+              alt={prospect.branding.storeHeroImage ? (prospect.branding.storeHeroImageAlt ?? featured.name) : featured.name}
+              fill
+              preload
+              sizes="(max-width: 800px) 94vw, 48vw"
+            />
+            {prospect.branding.storeHeroImage && <span className="store-featured-fade" aria-hidden="true"/>}
+          </span>
           <span className="store-featured-footer"><strong>{featured.name}</strong><b>${featured.price}</b></span>
         </button>}
       </section>
@@ -78,7 +88,13 @@ export function StoreScreen() {
       {selected && <div className="store-modal-layer" onMouseDown={() => setSelected(null)}>
         <section className="store-product-modal" onMouseDown={(event) => event.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="store-product-title">
           <button ref={closeButtonRef} className="store-modal-close" onClick={() => setSelected(null)} aria-label="Close product details">×</button>
-          <div className="store-modal-media"><Image src={selected.image} alt={selected.name} fill sizes="(max-width: 760px) 100vw, 52vw"/></div>
+          <div className="store-modal-media">
+            <Image src={showBack && selected.backImage ? selected.backImage : selected.image} alt={`${selected.name}${showBack ? " — back" : ""}`} fill sizes="(max-width: 760px) 100vw, 52vw"/>
+            {selected.backImage && <div className="store-modal-view-toggle" role="tablist" aria-label="Jersey view">
+              <button type="button" role="tab" aria-selected={!showBack} onClick={() => setShowBack(false)}>Front</button>
+              <button type="button" role="tab" aria-selected={showBack} onClick={() => setShowBack(true)}>Back</button>
+            </div>}
+          </div>
           <div className="store-modal-copy">
             <span className="eyebrow">{prospect.copy.store.itemEyebrow}</span>
             <h2 id="store-product-title">{selected.name}</h2>

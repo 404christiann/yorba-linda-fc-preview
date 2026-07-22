@@ -7,6 +7,7 @@ import { TierGate } from "@/components/tier/TierGate";
 import { useMockData } from "@/lib/store/MockDataProvider";
 import { useActiveTeam } from "@/components/layout/ActiveTeamProvider";
 import { MatchdaySlideshow } from "@/components/public/MatchdaySlideshow";
+import { StandingsTable } from "@/components/public/StandingsTable";
 
 const matchDateFormat = new Intl.DateTimeFormat("en-US", {
   month: "long",
@@ -74,6 +75,10 @@ export function HomeScreen() {
       </footer>
     </section>}
 
+    <TierGate feature="sponsors"><section className="partner-home"><header className="partner-home-head"><span className="eyebrow">Proudly supported by</span><Link href="/sponsors" className="partner-cta">Get involved</Link></header><div className="partner-marquee"><div className="partner-track">{[...sponsors, ...sponsors].map((sponsor, index) => <span className="partner-logo" key={`${sponsor.id}-${index}`}><Image src={sponsor.logo} alt={sponsor.name} width={260} height={80}/></span>)}</div></div></section></TierGate>
+
+    <StandingsTable />
+
     <MatchdaySlideshow />
 
     <TierGate feature="store"><section className="kit-home">
@@ -98,25 +103,21 @@ export function HomeScreen() {
       </div>
     </section></TierGate>
 
-    <section className="club-story">
-      <header className="story-heading">
-        <span className="eyebrow">Our identity</span>
-        <h2>{prospect.copy.home.identityHeadline[0]}<br/><em>{prospect.copy.home.identityHeadline[1]}</em></h2>
-      </header>
-      <div className="story-copy">
-        <p>{prospect.about.story.split("\n\n")[0]}</p>
-        <div className="story-meta">
-          <span>Founded <strong>{prospect.club.foundedYear}</strong></span>
-          <span>Home <strong>{prospect.club.venue}</strong></span>
+    {prospect.branding.recruitImage && (
+      <section className="recruit-cta">
+        <Image
+          className="recruit-cta-image"
+          src={prospect.branding.recruitImage}
+          alt={prospect.branding.recruitImageAlt ?? ""}
+          fill
+          sizes="100vw"
+        />
+        <div className="recruit-cta-content">
+          <h2>{prospect.copy.home.recruitHeadline[0]}<br/><em>{prospect.copy.home.recruitHeadline[1]}</em></h2>
+          <p>{prospect.copy.home.recruitIntro}</p>
+          <Link href="/club#contact" className="recruit-cta-button">{prospect.copy.home.recruitButtonLabel}</Link>
         </div>
-        <Link href="/club">Our story →</Link>
-      </div>
-      <aside className="story-pillars" aria-label={`What defines ${prospect.club.name}`}>
-        <span className="story-pillars-label">What defines us</span>
-        {prospect.about.highlights?.map((highlight) => <p key={highlight}>{highlight}</p>)}
-      </aside>
-    </section>
-
-    <TierGate feature="sponsors"><section className="partner-home"><span className="eyebrow">Proudly supported by</span><div>{sponsors.map((sponsor) => <span key={sponsor.id} data-level={sponsor.level}>{sponsor.name}</span>)}</div><Link href="/sponsors">Meet our partners →</Link></section></TierGate>
+      </section>
+    )}
   </>;
 }

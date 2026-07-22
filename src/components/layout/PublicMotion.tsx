@@ -102,7 +102,10 @@ export function PublicMotion() {
             });
           }
 
-          root.querySelectorAll<HTMLElement>("section:not(.hero)").forEach((section) => {
+          // .partner-home holds a continuously-scrolling logo marquee — it should
+          // already be moving on first paint, not sit invisible until scrolled
+          // into view like the rest of the page's fade-in sections.
+          root.querySelectorAll<HTMLElement>("section:not(.hero):not(.partner-home)").forEach((section) => {
             gsap.from(section, {
               autoAlpha: 0,
               y: distance,
@@ -156,7 +159,22 @@ export function PublicMotion() {
 
     ScrollTrigger.refresh();
 
+    // Images and fonts that finish loading after this point can shift layout,
+    // which leaves ScrollTrigger's cached trigger positions stale. A once-only
+    // trigger whose position is wrong can leave a section permanently hidden.
+    // Re-run refresh() whenever late-loading assets settle so trigger math
+    // reflects final layout.
+    const refresh = () => ScrollTrigger.refresh();
+    const images = Array.from(root.querySelectorAll("img"));
+    const pendingImages = images.filter((img) => !img.complete);
+    pendingImages.forEach((img) => img.addEventListener("load", refresh, { once: true }));
+
+    window.addEventListener("load", refresh);
+    document.fonts?.ready?.then(refresh);
+
     return () => {
+      window.removeEventListener("load", refresh);
+      pendingImages.forEach((img) => img.removeEventListener("load", refresh));
       media.revert();
       context.revert();
     };

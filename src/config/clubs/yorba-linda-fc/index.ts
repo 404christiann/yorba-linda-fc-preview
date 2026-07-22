@@ -7,16 +7,37 @@ import type { Fixture, Player, Position, ProspectConfig, StaffMember } from "@/c
 const ASSET_BASE =
   "https://ydvggllbrswfchgjhjhr.supabase.co/storage/v1/object/public/assets/yorbaFCAssets";
 
-const firstTeam: Array<[string, string, number, Position]> = [
-  ["Aleks", "Petrov", 1, "GK"], ["Marc", "Dubois", 21, "GK"],
-  ["Erion", "Kastrati", 2, "DF"], ["Rafael", "Souza", 3, "DF"], ["Jordan", "Mitchell", 4, "DF"], ["Nikolay", "Ivanov", 5, "DF"], ["Tyler", "Brooks", 15, "DF"], ["Bruno", "Alves", 22, "DF"],
-  ["Dimitar", "Yankov", 6, "MF"], ["Enis", "Hoxha", 8, "MF"], ["Julien", "Marchand", 10, "MF"], ["Diego", "Ramirez", 14, "MF"], ["Thiago", "Costa", 18, "MF"], ["Kevin", "Nguyen", 23, "MF"],
-  ["Gjergj", "Berisha", 7, "FW"], ["Matheus", "Lima", 9, "FW"], ["Antoine", "Girard", 11, "FW"], ["Marcus", "Reyes", 19, "FW"],
+// Real transparent-cutout player photo, also used as the store's featured
+// product image — reused here for the first-team roster's starting
+// goalkeeper so one real photo appears in both places.
+const PLAYER_PHOTO = `${ASSET_BASE}/${encodeURIComponent("Yorba Linda FC roster pic example website cutout.png")}`;
+
+// Same Supabase project, separate bucket ("sponor_logos" — bucket name as
+// created, not a typo introduced here), folder "yorbaLindaFC". These are the
+// club's real sponsors — white-on-transparent logo files, meant to sit on a
+// dark section background.
+const SPONSOR_ASSET_BASE =
+  "https://ydvggllbrswfchgjhjhr.supabase.co/storage/v1/object/public/sponor_logos/yorbaLindaFC";
+const sponsorLogo = (fileName: string) => `${SPONSOR_ASSET_BASE}/${encodeURIComponent(fileName)}`;
+
+// Same Supabase project, separate bucket ("leagueLogos"). Governing-body /
+// league marks shown in the nav next to the crest — color variant for the
+// solid/scrolled nav, white variant for the transparent nav over a hero.
+const LEAGUE_LOGO_BASE =
+  "https://ydvggllbrswfchgjhjhr.supabase.co/storage/v1/object/public/leagueLogos";
+const leagueLogo = (fileName: string) => `${LEAGUE_LOGO_BASE}/${encodeURIComponent(fileName)}`;
+
+const firstTeam: Array<[string, string, number, Position, string]> = [
+  ["Aleks", "Petrov", 1, "GK", "Bulgarian"], ["Marc", "Dubois", 21, "GK", "French"],
+  ["Erion", "Kastrati", 2, "DF", "Albanian"], ["Rafael", "Souza", 3, "DF", "Brazilian"], ["Jordan", "Mitchell", 4, "DF", "American"], ["Nikolay", "Ivanov", 5, "DF", "Bulgarian"], ["Tyler", "Brooks", 15, "DF", "American"], ["Bruno", "Alves", 22, "DF", "Brazilian"],
+  ["Dimitar", "Yankov", 6, "MF", "Bulgarian"], ["Enis", "Hoxha", 8, "MF", "Albanian"], ["Julien", "Marchand", 10, "MF", "French"], ["Diego", "Ramirez", 14, "MF", "Mexican"], ["Thiago", "Costa", 18, "MF", "Brazilian"], ["Kevin", "Nguyen", 23, "MF", "American"],
+  ["Gjergj", "Berisha", 7, "FW", "Albanian"], ["Matheus", "Lima", 9, "FW", "Brazilian"], ["Antoine", "Girard", 11, "FW", "French"], ["Marcus", "Reyes", 19, "FW", "Mexican"],
 ];
 
-const makePlayers = (rows: Array<[string, string, number, Position]>, teamId: string, start: number): Player[] =>
-  rows.map(([firstName, lastName, number, position], index) => ({
-    id: `p${String(start + index).padStart(2, "0")}`, teamId, firstName, lastName, number, position,
+const makePlayers = (rows: Array<[string, string, number, Position, string]>, teamId: string, start: number): Player[] =>
+  rows.map(([firstName, lastName, number, position, nationality], index) => ({
+    id: `p${String(start + index).padStart(2, "0")}`, teamId, firstName, lastName, number, position, nationality,
+    ...(teamId === "first" && index === 0 ? { photo: PLAYER_PHOTO } : {}),
     hometown: index % 4 === 0 ? "Yorba Linda, CA" : index % 4 === 1 ? "Anaheim, CA" : index % 4 === 2 ? "Fullerton, CA" : "Placentia, CA",
     height: position === "GK" ? "6'1\"" : index % 2 ? "5'10\"" : "6'0\"", yearJoined: 2026,
     bio: `${firstName} brings composure, work rate, and a team-first edge to Yorba Linda FC. A competitor built for the 18+ level.`,
@@ -29,10 +50,10 @@ const played = (id: string, opponent: string, date: string, clubScore: number, o
 const upcoming = (id: string, opponent: string, date: string, homeAway: "home" | "away", venue: string): Fixture => ({ id, teamId: "first", seasonId: "s2026", opponent, date, venue, homeAway, competition: "SoCal Premier League", status: "upcoming" });
 
 const staff: StaffMember[] = [
-  { id: "st01", teamId: "first", name: "Ivo Georgiev", role: "Head Coach", bio: "Leads training and matchday preparation for the first team." },
-  { id: "st02", teamId: "first", name: "Carlos Fernandez", role: "Assistant Coach" },
-  { id: "st03", teamId: "first", name: "Ledion Krasniqi", role: "Goalkeeper Coach" },
-  { id: "st04", name: "Sarah Whitman", role: "Club Manager" },
+  { id: "st01", teamId: "first", name: "Ivo Georgiev", role: "Head Coach", nationality: "Bulgarian", bio: "Leads training and matchday preparation for the first team." },
+  { id: "st02", teamId: "first", name: "Carlos Fernandez", role: "Assistant Coach", nationality: "Mexican" },
+  { id: "st03", teamId: "first", name: "Ledion Krasniqi", role: "Goalkeeper Coach", nationality: "Albanian" },
+  { id: "st04", name: "Sarah Whitman", role: "Club Manager", nationality: "American" },
 ];
 
 export const yorbaLindaFc: ProspectConfig = {
@@ -50,6 +71,16 @@ export const yorbaLindaFc: ProspectConfig = {
       { src: `${ASSET_BASE}/matchday-03.webp`, orientation: "portrait", alt: "Yorba Linda FC midfielder brings the ball forward" },
       { src: `${ASSET_BASE}/matchday-04.webp`, orientation: "landscape", alt: "Yorba Linda FC squad photo before kickoff" },
     ],
+    affiliations: [
+      { name: "US Soccer", colorLogo: leagueLogo("US Soccer logo color.png"), whiteLogo: leagueLogo("US Soccer logo white.png") },
+      { name: "FIFA", colorLogo: leagueLogo("FIFA logo color.png"), whiteLogo: leagueLogo("FIFA logo white.png") },
+      { name: "UPSL", colorLogo: leagueLogo("UPSL logo color.png"), whiteLogo: leagueLogo("UPSL logo white.png") },
+      { name: "SWPL", colorLogo: leagueLogo("SWPL_logo_Color.webp"), whiteLogo: leagueLogo("SWPL.png") },
+    ],
+    recruitImage: `${ASSET_BASE}/ready_to_compete.jpg`,
+    recruitImageAlt: "Yorba Linda FC player dribbling past a defender during a match",
+    storeHeroImage: PLAYER_PHOTO,
+    storeHeroImageAlt: "Yorba Linda FC player wearing the club jersey",
   },
   copy: {
     metadata: {
@@ -63,8 +94,10 @@ export const yorbaLindaFc: ProspectConfig = {
       collectionHeadline: ["Navy, gold,", "one crest."],
       collectionIntro: "A sample club collection built around the navy home and white away jerseys.",
       collectionItemLabel: "Concept merchandise",
-      identityHeadline: ["A club shaped by", "Orange County."],
       gallerySectionHeadline: ["This is", "Orange County soccer."],
+      recruitHeadline: ["Ready to", "compete?"],
+      recruitIntro: "We're scouting driven, disciplined players ready to prove themselves at a serious amateur or semi-pro level.",
+      recruitButtonLabel: "Join today",
     },
     store: {
       eyebrow: "Concept club collection",
@@ -73,7 +106,7 @@ export const yorbaLindaFc: ProspectConfig = {
       catalogEyebrow: "First-team concepts",
       catalogHeading: "Choose your colors.",
       catalogSummary: "2 sample products · concept preview",
-      productTypeLabels: ["Home concept", "Away concept", "Training concept"],
+      productTypeLabels: ["Away concept", "Home concept", "Training concept"],
       itemEyebrow: "Concept merchandise",
       collectionName: "Yorba Linda FC concepts",
       productDescription: "A sample Yorba Linda FC product finished in the club palette for this interactive concept preview.",
@@ -86,7 +119,11 @@ export const yorbaLindaFc: ProspectConfig = {
       staffBio: "{name} supports the first-team environment and the standards that define Yorba Linda FC.",
     },
   },
-  contact: { email: "hello@ocbulgar.com", phone: "213-200-5078", address: "Portola Springs Community Park Field B, CA 92618", social: { instagram: "https://www.instagram.com/yorbalindafc/", facebook: "https://www.facebook.com/yorbalindafc/" } },
+  contact: {
+    email: "hello@ocbulgar.com", phone: "213-200-5078", address: "Portola Springs Community Park Field B, CA 92618",
+    trainingHours: [{ label: "Mon–Fri", hours: "9am–8pm" }, { label: "Saturday", hours: "10am–4pm" }],
+    social: { instagram: "https://www.instagram.com/yorbalindafc/", facebook: "https://www.facebook.com/yorbalindafc/" },
+  },
   seasons: [{ id: "s2026", label: "2026 Season", status: "active" }],
   currentSeasonId: "s2026",
   teams: [{ id: "first", name: "First Team", shortLabel: "First Team" }],
@@ -110,11 +147,53 @@ export const yorbaLindaFc: ProspectConfig = {
     story: "Yorba Linda FC was created for players who still take the game seriously but don't always have clear options after high school, college, or academy programs. Some of our players have ambitions to play professionally, others are looking to stay sharp in a serious environment, and some simply miss competitive football.\n\nWe focus on the 18+ age group — players who are beyond youth academies but still want structured, challenging games. Our group brings together people from different countries and backgrounds, including players from Bulgaria, Albania, Brazil, France, and the U.S.\n\nAlthough the club is run as a hobby project, the expectations are clear: show up, compete, stay committed, and improve. We're not part of an official academy system, but some players have used their time here to stay ready for opportunities, both in the U.S. and abroad.",
     mission: "Bring out the best in our players and help them grow to semi-pro and pro levels.",
     highlights: ["Est. 2026 in Yorba Linda, California", "Multicultural 18+ roster spanning Bulgaria, Albania, Brazil, France, and the U.S.", "Competes in the SoCal Premier League"],
+    training: {
+      intro: "Training is focused on match preparation, fitness, and technical sharpness. Sessions cover:",
+      points: [
+        "Small-sided games and position-specific drills",
+        "Tactical preparation based on upcoming opponents",
+        "Fitness work to maintain match readiness",
+        "Scrimmages and situational play",
+      ],
+      closing: "We train with the same standards you'd expect from serious amateur or semi-pro setups — without overcomplicating it.",
+    },
   },
-  sponsors: [],
+  standings: {
+    competitionName: "SoCal Premier League",
+    intro: "Yorba Linda FC competes in a regional men's league with competitive amateur and semi-pro teams from across Southern California. Matches are competitive and physical, offering serious players a way to stay sharp and test themselves regularly.",
+    rows: [
+      { id: "std01", teamName: "Fullerton Rangers", gp: 7, w: 5, d: 1, l: 1, gd: 12, points: 16 },
+      { id: "std02", teamName: "Yorba Linda FC", teamLogo: `${ASSET_BASE}/crest.png`, gp: 7, w: 4, d: 2, l: 1, gd: 7, points: 14 },
+      { id: "std03", teamName: "Cypress United", gp: 7, w: 4, d: 0, l: 3, gd: 3, points: 12 },
+      { id: "std04", teamName: "Chino Hills SC", gp: 7, w: 3, d: 2, l: 2, gd: 1, points: 11 },
+      { id: "std05", teamName: "Brea Athletic", gp: 7, w: 3, d: 1, l: 3, gd: -2, points: 10 },
+      { id: "std06", teamName: "La Habra FC", gp: 7, w: 2, d: 2, l: 3, gd: -4, points: 8 },
+      { id: "std07", teamName: "Placentia Rangers", gp: 7, w: 1, d: 3, l: 3, gd: -6, points: 6 },
+      { id: "std08", teamName: "Anaheim Hills FC", gp: 7, w: 1, d: 1, l: 5, gd: -11, points: 4 },
+    ],
+  },
+  sponsors: [
+    { id: "sp01", name: "Azure", level: "partner", logo: sponsorLogo("Azure logo white.png") },
+    { id: "sp02", name: "Fidelity", level: "partner", logo: sponsorLogo("Fidelity logo white.png") },
+    { id: "sp03", name: "Flowable", level: "partner", logo: sponsorLogo("Flowable logo white.png") },
+    { id: "sp04", name: "IBM", level: "partner", logo: sponsorLogo("IBM logo white.png") },
+    { id: "sp05", name: "Mark43", level: "partner", logo: sponsorLogo("Mark43logo white.png") },
+    { id: "sp06", name: "Pega", level: "partner", logo: sponsorLogo("Pega logo white.png") },
+    { id: "sp07", name: "Shift Sports", level: "partner", logo: sponsorLogo("Shift Sports logo white.png") },
+  ],
   store: { mode: "internal", products: [
-    { id: "prod01", name: "Navy Home Jersey", price: 65, image: `${ASSET_BASE}/jersey-blue.webp`, category: "jersey", sizes: ["S", "M", "L", "XL"] },
-    { id: "prod02", name: "White Away Jersey", price: 65, image: `${ASSET_BASE}/jersey-white.webp`, category: "jersey", sizes: ["S", "M", "L", "XL"] },
+    {
+      id: "prod02", name: "White Away Jersey", price: 65,
+      image: `${ASSET_BASE}/${encodeURIComponent("Yorbra Linda Football Club Away Jersey.png")}`,
+      backImage: `${ASSET_BASE}/yorba_updated_jersey_white.png`,
+      category: "jersey", sizes: ["S", "M", "L", "XL"],
+    },
+    {
+      id: "prod01", name: "Navy Home Jersey", price: 65,
+      image: `${ASSET_BASE}/${encodeURIComponent("Yorbra Linda Football Club Home Jersey.png")}`,
+      backImage: `${ASSET_BASE}/yorba_updated_jersey_navy.png`,
+      category: "jersey", sizes: ["S", "M", "L", "XL"],
+    },
   ] },
   analytics: {
     weeklyPageViews: [{weekLabel:"Jun 1",views:210},{weekLabel:"Jun 8",views:265},{weekLabel:"Jun 15",views:298},{weekLabel:"Jun 22",views:312},{weekLabel:"Jun 29",views:355},{weekLabel:"Jul 6",views:401},{weekLabel:"Jul 13",views:438}],
