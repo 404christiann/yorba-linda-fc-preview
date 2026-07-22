@@ -52,9 +52,15 @@ If this feature needs changes beyond this club's own data (copy, styling, new co
 
 ## Homepage section order
 
-Hero → Next match → Sponsors (logo carousel + "Get involved" CTA) → League standings → Matchday photo gallery → Shop the collection (Starter-hidden) → "Ready to compete?" recruiting CTA (closing section, real photo + real training copy, links to `/club`).
+Hero → Shop the collection (Starter-hidden) → Next match → Sponsors (logo carousel + "Get involved" CTA) → League standings → Matchday photo gallery → "Ready to compete?" recruiting CTA (closing section, real photo + real training copy, links to `/club`).
 
 There is no "Our identity" section on the homepage anymore — that content now lives on `/club` as a "What defines us" section (styled to match the Training section's bullet-list treatment), placed right after the manifesto.
+
+This order is currently specific to this snapshot's `HomeScreen.tsx` — the master template's `HomeScreen.tsx` has drifted out of sync (older section order, missing the sponsor-carousel conversion and other rounds' worth of changes) and was not updated when this reorder happened, to avoid compounding that drift. Treat master's homepage layout as stale until a dedicated reconciliation pass.
+
+## Club page (`/club`) group photo
+
+`about.groupPhoto` (optional, master-template feature) renders a real team photo directly below the mission pull-quote in the `.manifesto` section — a compact rounded card (`max-height:42vh`, so it can never grow oversized regardless of monitor size), not a full-bleed band. The founding-year number mark that used to sit to the left of the story text has been removed; the story column now starts flush left. Built in both the master template (with a placeholder sample on Meridian's reference config) and this snapshot (with the real `group_photo.jpg`).
 
 ## Sponsors (`/sponsors`)
 
@@ -63,8 +69,8 @@ Real sponsor logos (7: Fidelity, Flowable, IBM, Mark43, Pega, Shift Sports, Azur
 ## Store (`/store`)
 
 - Front jersey photos are real, transparent-cutout PNGs (not the old opaque studio photos). Each jersey also has an optional `backImage` — a Front/Back toggle appears in the product detail modal only; grid/card views always show the front.
-- The featured product panel shows a real player photo (not a flat product shot) fading into the white background via a `mask-image` gradient, rather than a hard photo edge.
-- **Known issue, not yet resolved:** hovering the featured photo still shows a visible gap/artifact near the top of the image (`.store-featured-image.is-hero-photo`, `globals.css`) — the `transform:scale()` hover-zoom and the `mask-image` fade appear to interact badly, and there's unresolved headroom in the source photo itself (`Yorba Linda FC roster pic example website cutout.png` has ~5.5% transparent padding above the hairline) that `object-position:top` isn't fully compensating for. Next session should either remove the hover-zoom transform on this element entirely or crop the source photo's dead space before reintroducing zoom.
+- The featured product panel shows a real player photo (not a flat product shot), rendered with `object-fit:contain` plus a separate overlay fade `<div>` (not a `mask-image`) and no hover-zoom transform on that element — this replaced an earlier `mask-image` + `transform:scale()` combination that caused a WebKit/Chromium compositing artifact on hover.
+- The two jersey cards (grid/card view, on both `/store` and the homepage's "Shop the collection") each carry a 2px gold border so they read as distinct objects against their own card backgrounds (the away jersey's card background is near-white, the home jersey's is navy — without a border each jersey visually merged into its own card). Centered as a group via `grid-template-columns:repeat(auto-fit,minmax(...))` + `justify-content:center` rather than a fixed 3-column split, so it stays centered regardless of how many products exist. On mobile, `.kit-collection` (homepage only) becomes a horizontal scroll-snap carousel — its `justify-content` must stay `start` there, since inheriting the desktop `center` value makes the carousel load scrolled to its midpoint instead of showing the first card.
 
 ## Locked product behavior
 
